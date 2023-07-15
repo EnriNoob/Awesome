@@ -12,6 +12,7 @@ local watch = awful.spawn and awful.spawn.with_line_callback
 -- Private utility functions
 ------------------------------------------
 
+local sus
 local tolower = string.lower
 
 local function file_exists(command)
