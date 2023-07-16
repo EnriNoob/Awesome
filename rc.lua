@@ -24,7 +24,7 @@ local battery_widget = require("battery-widget")
 
 
 -- Load Debian menu entries
-local debian = require("debian.menu")
+--local debian = require("debian.menu")
 local has_fdo, freedesktop = pcall(require, "freedesktop")
 
 -- {{{ Error handling
@@ -70,19 +70,9 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
-    awful.layout.suit.floating,
+     
     awful.layout.suit.tile,
-    awful.layout.suit.tile.left,
-    awful.layout.suit.tile.bottom,
-    awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
-    awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
-    awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier,
-    awful.layout.suit.corner.nw,
+   
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
@@ -107,14 +97,6 @@ if has_fdo then
         before = { menu_awesome },
         after =  { menu_terminal }
     })
-else
-    mymainmenu = awful.menu({
-        items = {
-                  menu_awesome,
-                  { "Debian", debian.menu.Debian_menu.Debian },
-                  menu_terminal,
-                }
-    })
 end
 
 
@@ -125,51 +107,6 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
--- {{{ Wibar
--- Create a textclock widget
-mytextclock = wibox.widget.textclock()
-
-
--- Create a wibox for each screen and add it
-local taglist_buttons = gears.table.join(
-                    awful.button({ }, 1, function(t) t:view_only() end),
-                    awful.button({ modkey }, 1, function(t)
-                                              if client.focus then
-                                                  client.focus:move_to_tag(t)
-                                              end
-                                          end),
-                    awful.button({ }, 3, awful.tag.viewtoggle),
-                    awful.button({ modkey }, 3, function(t)
-                                              if client.focus then
-                                                  client.focus:toggle_tag(t)
-                                              end
-                                          end),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
-                )
-
-local tasklist_buttons = gears.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  c:emit_signal(
-                                                      "request::activate",
-                                                      "tasklist",
-                                                      {raise = true}
-                                                  )
-                                              end
-                                          end),
-                     awful.button({ }, 3, function()
-                                              awful.menu.client_list({ theme = { width = 250 } })
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                          end))
 
 local function set_wallpaper(s)
     -- Wallpaper
@@ -193,79 +130,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Each screen has its own tag table.
     awful.tag({ "[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "[8]", "[9]" }, s, awful.layout.layouts[1])
-
-    -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
-    -- Create an imagebox widget which will contain an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(gears.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(-1) end),
-                           awful.button({ }, 4, function () awful.layout.inc( 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(-1) end)))
-    -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist {
-        screen  = s,
-        filter  = awful.widget.taglist.filter.all,
-        buttons = taglist_buttons
-    }
-
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen  = s,
-        filter  = awful.widget.tasklist.filter.currenttags,
-        buttons = tasklist_buttons
-    }
-
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s })
-
-    -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            mylauncher,
-            s.mytaglist,
-            s.mypromptbox,
-        },
-        s.mytasklist, -- Middle widget
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            mykeyboardlayout,
-            wibox.widget.systray(),
-            mytextclock,
-            battery_widget {
-                ac = "ACAD",
-                adapter = "BAT1",
-                ac_prefix = " carica ",
-                battery_prefix = " batteria ",
-                percent_colors = {
-                    { 25, "red"   },
-                    { 50, "orange"},
-                    {999, "green" },
-                },
-                listen = true,
-                timeout = 10,
-                widget_text = "${AC_BAT}${color_on}${percent}%${color_off} ",
-                widget_font = "Deja Vu Sans Mono 11",
-                tooltip_text = "Battery ${state}${time_est}\nCapacity: ${capacity_percent}%",
-                alert_threshold = 5,
-                alert_timeout = 0,
-                alert_title = "Low battery !",
-                alert_text = "${AC_BAT}${time_est}",
-                alert_icon = "~/Downloads/low_battery_icon.png",
-                warn_full_battery = true,
-                full_battery_icon = "~/Downloads/full_battery_icon.png",
-            },
-            s.mylayoutbox,
-        },
-    }
-
-    -- mettere la batteria :')
-end)
--- }}}
+end
+)
 
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
@@ -345,6 +211,9 @@ globalkeys = gears.table.join(
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
+    awful.key({ modkey,           }, "e", function ()
+            awful.util.spawn("nautilus") end,
+            {description = "open nautilus", group = "launcher"}),
 
     awful.key({ modkey, "Control" }, "n",
               function ()
@@ -360,7 +229,7 @@ globalkeys = gears.table.join(
 
     -- Prompt
     awful.key({ modkey },            "a",     function () 
-    awful.util.spawn("dmenu_run") end,
+    awful.util.spawn("dmenu_run -b -sb '#fe0101' -sf '#000000' -nb '#000000' -nf '#fe0101' ") end,
               {description = "run dmenu_run", group = "launcher"}),
 
     awful.key({ modkey }, "x",
@@ -538,9 +407,9 @@ awful.rules.rules = {
       }, properties = { floating = true }},
 
     -- Add titlebars to normal clients and dialogs
-    { rule_any = {type = { "normal", "dialog" }
-      }, properties = { titlebars_enabled = true }
-    },
+    --{ rule_any = {type = { "normal", "dialog" }
+    --  }, properties = { titlebars_enabled = true }
+    --},
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
@@ -612,5 +481,12 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+-- config/customizzazioni personalizzate
+beautiful.useless_gap = 20
+beautiful.border_color = white
+beautiful.border_marker = black
+
 --Autostart application (robe che partono all'inizio in automatico quando si entra nel sistema)
-awful.spawn.with_shell("compton")
+awful.spawn.with_shell("picom")
+awful.spawn.with_shell("kmix")
+awful.spawn.with_shell("/home/enri/.config/polybar/launch.sh")
