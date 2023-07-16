@@ -18,6 +18,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+--library to display battery imported locally
 local battery_widget = require("battery-widget")
 
 
@@ -178,7 +179,7 @@ local function set_wallpaper(s)
         if type(wallpaper) == "function" then
             wallpaper = wallpaper(s)
         end
-        gears.wallpaper.maximized("/home/enri/Immagini/richard-horvath-_nWaeTF6qo0-unsplash.jpg", s, true)
+        gears.wallpaper.maximized("/home/enri/Immagini/1168975.png", s, true)
     end
 end
 
@@ -358,7 +359,7 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () 
+    awful.key({ modkey },            "a",     function () 
     awful.util.spawn("dmenu_run") end,
               {description = "run dmenu_run", group = "launcher"}),
 
